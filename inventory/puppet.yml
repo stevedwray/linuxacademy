@@ -1,0 +1,13 @@
+all:
+  hosts:
+    master-1:
+  children:
+    puppet_labs:
+      hosts:
+        master-1:
+    masters:
+      hosts: 
+        master-1:
+    nodes:
+      hosts:
+

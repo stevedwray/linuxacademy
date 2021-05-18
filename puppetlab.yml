@@ -1,0 +1,44 @@
+---
+- name: linuxacademy puppet hands on labs
+  hosts: puppet_labs
+  remote_user: cloud_user
+  become: yes
+
+  tasks:
+  - name: Gather OS specific variables
+    include_vars: "{{ item }}"
+    with_first_found:
+    - "{{ ansible_distribution }}.yml"
+  - name: Gather vault variables
+    include_vars: inventory/host_vars/master-1/vault
+  - name: Set up hosts files
+    lineinfile:
+      path: /etc/hosts
+      regexp: '^127\.0\.0\.1 localhost'
+      line: "127.0.0.1 {{ ansible_fqdn }} localhost"
+  - name: install base packages
+    action: >
+      {{ ansible_pkg_mgr }} name=python-apt state=present
+  - name: Download puppet tarball
+    get_url:
+      url: "{{ puppet_enterprise_url }}"
+      dest: "/home/cloud_user/{{ puppet_enterprise_tarball }}"
+      owner: cloud_user
+      group: cloud_user
+  - name: Unpack puppet tarball
+    unarchive:
+      remote_src: yes
+      src: "/home/cloud_user/{{ puppet_enterprise_tarball }}"
+      dest: /home/cloud_user/
+      creates: "/home/cloud_user/{{ puppet_enterprise_package }}"
+      owner: cloud_user
+      group: cloud_user
+  - name: Put pe.conf file in place
+    template:
+      src: templates/master_pe.conf.j2
+      dest: "/home/cloud_user/{{ puppet_enterprise_package }}/master_pe.conf"
+      owner: cloud_user
+      group: cloud_user
+  - name: Run pe installer with conf file
+    command: "/home/cloud_user/{{ puppet_enterprise_package }}/puppet-enterprise-installer -c /home/cloud_user/{{ puppet_enterprise_package }}/master_pe.conf"
+
