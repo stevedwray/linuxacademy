@@ -15,16 +15,27 @@
     lineinfile:
       path: /etc/hosts
       regexp: '^127\.0\.0\.1 localhost'
-      line: "127.0.0.1 {{ ansible_fqdn }} localhost"
-  - name: install base packages
-    action: >
-      {{ ansible_pkg_mgr }} name=python-apt state=present
+      line: "127.0.0.1 {{ master_fqdn }} localhost"
+    when: puppet_role == "master"
+  - name: Set up hosts files
+    lineinfile:
+      path: /etc/hosts
+      line: "{{ master_ip }} {{ master_fqdn }}"
+    when: puppet_role == "node"
+
+#  - name: install base packages
+#    action: >
+#      {{ ansible_pkg_mgr }} name=python-apt state=present
+
+##################################
+# Install Puppet Enterprise Master
   - name: Download puppet tarball
     get_url:
       url: "{{ puppet_enterprise_url }}"
       dest: "/home/cloud_user/{{ puppet_enterprise_tarball }}"
       owner: cloud_user
       group: cloud_user
+    when: puppet_role == "master"
   - name: Unpack puppet tarball
     unarchive:
       remote_src: yes
@@ -33,12 +44,26 @@
       creates: "/home/cloud_user/{{ puppet_enterprise_package }}"
       owner: cloud_user
       group: cloud_user
+    when: puppet_role == "master"
   - name: Put pe.conf file in place
     template:
       src: templates/master_pe.conf.j2
       dest: "/home/cloud_user/{{ puppet_enterprise_package }}/master_pe.conf"
       owner: cloud_user
       group: cloud_user
+    when: puppet_role == "master"
   - name: Run pe installer with conf file
     command: "/home/cloud_user/{{ puppet_enterprise_package }}/puppet-enterprise-installer -c /home/cloud_user/{{ puppet_enterprise_package }}/master_pe.conf"
+    args:
+      creates: /opt/puppetlabs/
+    when: puppet_role == "master"
+
+##################################
+# Install Puppet Enterprise Agents
+  - name: Install puppet agent
+    command: "curl -k https://{{ master_ip }}:8140/packages/current/install.bash | sudo bash"
+    args:
+      creates: /opt/puppetlabs/
+    when: puppet_role == "node"
+
 

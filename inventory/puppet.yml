@@ -1,13 +1,27 @@
 all:
   hosts:
     master-1:
+    node-1:
+    node-2:
   children:
     puppet_labs:
       hosts:
         master-1:
+        node-1:
+        node-2:
+      vars:
+        master_fqdn: swray1c.mylabserver.com
+        master_ip: 172.31.17.248
     masters:
       hosts: 
         master-1:
+      vars:
+        puppet_role: master
     nodes:
       hosts:
+        node-1:
+        node-2:
+      vars:
+        puppet_role: node
+
 
