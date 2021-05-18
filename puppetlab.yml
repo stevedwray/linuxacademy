@@ -61,7 +61,7 @@
 ##################################
 # Install Puppet Enterprise Agents
   - name: Install puppet agent
-    command: "curl -k https://{{ master_ip }}:8140/packages/current/install.bash | sudo bash"
+    shell: "curl -k https://{{ master_ip }}:8140/packages/current/install.bash | sudo bash"
     args:
       creates: /opt/puppetlabs/
     when: puppet_role == "node"
