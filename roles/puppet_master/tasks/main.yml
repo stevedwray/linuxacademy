@@ -1,0 +1,37 @@
+---
+- name: Gather vault variables
+  include_vars: vars/vault
+
+- name: Set up hosts files
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.0\.1 localhost'
+    line: "127.0.0.1 {{ master_fqdn }} localhost"
+
+- name: Download puppet tarball
+  get_url:
+    url: "{{ puppet_enterprise_url }}"
+    dest: "/home/cloud_user/{{ puppet_enterprise_tarball }}"
+    owner: cloud_user
+    group: cloud_user
+
+- name: Unpack puppet tarball
+  unarchive:
+    remote_src: yes
+    src: "/home/cloud_user/{{ puppet_enterprise_tarball }}"
+    dest: /home/cloud_user/
+    creates: "/home/cloud_user/{{ puppet_enterprise_package }}"
+    owner: cloud_user
+    group: cloud_user
+
+- name: Put pe.conf file in place
+  template:
+    src: master_pe.conf.j2
+    dest: "/home/cloud_user/{{ puppet_enterprise_package }}/master_pe.conf"
+    owner: cloud_user
+    group: cloud_user
+
+- name: Run pe installer with conf file
+  command: "/home/cloud_user/{{ puppet_enterprise_package }}/puppet-enterprise-installer -c /home/cloud_user/{{ puppet_enterprise_package }}/master_pe.conf"
+  args:
+    creates: /opt/puppetlabs/
