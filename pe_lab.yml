@@ -1,6 +1,6 @@
 ---
 - name: linuxacademy puppet hands on labs
-  hosts: puppet_labs
+  hosts: pe_labs
   remote_user: cloud_user
   become: yes
 
@@ -24,11 +24,11 @@
 
   - name: Puppet Master Role
     import_role:
-      name: puppet_master
-    tags: master
-    when: puppet_role == "master"
+      name: pe_master
+    tags: pe_master
+    when: puppet_role == "pe_master"
   - name: Puppet Node Role
     import_role:
-      name: puppet_node
-    tags: node
-    when: puppet_role == "node"
+      name: pe_node
+    tags: pe_node
+    when: puppet_role == "pe_node"

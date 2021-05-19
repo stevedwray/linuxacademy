@@ -1,27 +1,27 @@
 all:
   hosts:
-    master-1:
-    node-1:
-    node-2:
+    pe-master-1:
+    pe-node-1:
+    pe-node-2:
   children:
-    puppet_labs:
+    pe_labs:
       hosts:
-        master-1:
-        node-1:
-        node-2:
+        pe-master-1:
+        pe-node-1:
+        pe-node-2:
       vars:
         master_fqdn: swray1c.mylabserver.com
         master_ip: 172.31.7.241
-    masters:
+    pe_masters:
       hosts: 
-        master-1:
+        pe-master-1:
       vars:
-        puppet_role: master
-    nodes:
+        puppet_role: pe_master
+    pe_nodes:
       hosts:
-        node-1:
-        node-2:
+        pe-node-1:
+        pe-node-2:
       vars:
-        puppet_role: node
+        puppet_role: pe_node
 
 
