@@ -10,10 +10,12 @@
 # Maybe some check for connectivity?
 - name: Install puppet agent
   shell: "curl -k https://{{ master_ip }}:8140/packages/current/install.bash | sudo bash"
+  ignore_errors: false
   args:
     creates: /opt/puppetlabs/
 
 - name: Initial Puppet run on nodes
   command: /opt/puppetlabs/bin/puppet agent -t
-
+  ignore_errors: true
+  register: puppet_agent
 

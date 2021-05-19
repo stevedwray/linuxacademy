@@ -35,3 +35,8 @@
   command: "/home/cloud_user/{{ puppet_enterprise_package }}/puppet-enterprise-installer -c /home/cloud_user/{{ puppet_enterprise_package }}/master_pe.conf"
   args:
     creates: /opt/puppetlabs/
+
+- name: Initial Puppet run on master
+  command: /opt/puppetlabs/bin/puppet agent -t
+  ignore_errors: true
+  register: puppet_agent
