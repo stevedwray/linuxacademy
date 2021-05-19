@@ -1,0 +1,27 @@
+all:
+  hosts:
+    po-master-1:
+    po-node-1:
+    po-node-2:
+  children:
+    po_labs:
+      hosts:
+        po-master-1:
+        po-node-1:
+        po-node-2:
+      vars:
+        master_fqdn: swray1c.mylabserver.com
+        master_ip: 172.31.16.223
+    po_masters:
+      hosts: 
+        po-master-1:
+      vars:
+        puppet_role: po_master
+    po_nodes:
+      hosts:
+        po-node-1:
+        po-node-2:
+      vars:
+        puppet_role: po_node
+
+

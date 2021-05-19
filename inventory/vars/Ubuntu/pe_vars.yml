@@ -2,4 +2,3 @@
 puppet_enterprise_package: puppet-enterprise-2018.1.7-ubuntu-18.04-amd64
 puppet_enterprise_tarball: "{{ puppet_enterprise_package }}.tar.gz"
 puppet_enterprise_url: "https://pm.puppetlabs.com/puppet-enterprise/2018.1.7/{{ puppet_enterprise_tarball }}"
-

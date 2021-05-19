@@ -1,0 +1,3 @@
+---
+puppet_opensource_package: puppet5-release-bionic.deb
+puppet_opensource_url: "https://apt.puppetlabs.com/{{puppet_opensource_package}}"

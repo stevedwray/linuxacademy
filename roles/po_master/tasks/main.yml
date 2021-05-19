@@ -1,0 +1,42 @@
+---
+- name: Gather vault variables
+  include_vars: vars/vault
+
+- name: Set up hosts files
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.0\.1 localhost'
+    line: "127.0.0.1 {{ master_fqdn }} puppet localhost"
+
+- name: Install Puppet Opensource deb
+  apt:
+    deb: "{{ puppet_opensource_url }}"
+  register: deb_installed
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  when: deb_installed
+
+- name: Install Opensource Puppet master
+  apt:
+    name: puppetserver
+    state: present
+
+- name: Set up java params for Opensource Puppet master
+  lineinfile:
+    path: /etc/default/puppetserver
+    regexp: '^JAVA_ARGS'
+    line:  'JAVA_ARGS="-Xms512m -Xmx512m -Djruby.logger.class=com.puppetlabs.jruby_utils.jruby.Slf4jLogger"'
+
+- name: Set up Opensource Puppet services
+  service:
+    name: puppetserver
+    state: started
+    enabled: yes
+
+- name: Puppet Opensource sudoers
+  lineinfile:
+    path: /etc/sudoers.d/extra
+    line: 'Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin'
+

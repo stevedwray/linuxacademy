@@ -1,13 +1,13 @@
 ---
 - name: linuxacademy puppet hands on labs
-  hosts: pe_labs
+  hosts: po_labs
   remote_user: cloud_user
   become: yes
 
   tasks:
   - include_vars: inventory/vault
-  - include_vars: "inventory/vars/{{ ansible_distribution }}/vars.yml"
-    
+  - include_vars: "inventory/vars/{{ ansible_distribution }}/po_vars.yml"
+
   - name: install base packages
     action: >
       {{ ansible_pkg_mgr }} name={{packages}} state=present
@@ -17,11 +17,11 @@
 
   - name: Puppet Master Role
     import_role:
-      name: pe_master
-    tags: pe_master
-    when: puppet_role == "pe_master"
+      name: po_master
+    tags: po_master
+    when: puppet_role == "po_master"
   - name: Puppet Node Role
     import_role:
-      name: pe_node
-    tags: pe_node
-    when: puppet_role == "pe_node"
+      name: po_node
+    tags: po_node
+    when: puppet_role == "po_node"
