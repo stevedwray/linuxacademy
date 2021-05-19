@@ -40,3 +40,19 @@
   command: /opt/puppetlabs/bin/puppet agent -t
   ignore_errors: true
   register: puppet_agent
+
+- name: Install Puppet Opensource deb
+  apt:
+    deb: "{{ puppet_opensource_url }}"
+  register: deb_installed
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  when: deb_installed
+  
+- name: Install Puppet development kit
+  apt:
+    name: pdk
+    state: present
+
