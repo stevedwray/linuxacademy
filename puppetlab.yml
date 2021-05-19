@@ -15,7 +15,11 @@
 
   - name: install base packages
     action: >
-      {{ ansible_pkg_mgr }} name=curl state=present
+      {{ ansible_pkg_mgr }} name={{packages}} state=present
+    vars:
+      packages:
+      - curl
+      - vim
 
 
   - name: Puppet Master Role
