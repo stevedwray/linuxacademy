@@ -11,7 +11,7 @@ all:
         pe-node-2:
       vars:
         master_fqdn: swray1c.mylabserver.com
-        master_ip: 172.31.16.223
+        master_ip: 172.31.39.165
     pe_masters:
       hosts: 
         pe-master-1:

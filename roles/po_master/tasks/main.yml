@@ -29,14 +29,17 @@
     regexp: '^JAVA_ARGS'
     line:  'JAVA_ARGS="-Xms512m -Xmx512m -Djruby.logger.class=com.puppetlabs.jruby_utils.jruby.Slf4jLogger"'
 
+- name: Puppet Opensource sudoers
+  lineinfile:
+    path: /etc/sudoers.d/extra
+    line: 'Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin'
+    create: true
+    owner: root
+    group: root
+    mode: 0440
+
 - name: Set up Opensource Puppet services
   service:
     name: puppetserver
     state: started
     enabled: yes
-
-- name: Puppet Opensource sudoers
-  lineinfile:
-    path: /etc/sudoers.d/extra
-    line: 'Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin'
-

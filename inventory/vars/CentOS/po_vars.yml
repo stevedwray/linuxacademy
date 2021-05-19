@@ -1,0 +1,3 @@
+---
+puppet_opensource_package: puppet5-release-el-7.noarch.rpm
+puppet_opensource_url: "https://yum.puppet.com/{{puppet_opensource_package}}"

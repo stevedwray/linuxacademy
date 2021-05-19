@@ -2,20 +2,26 @@
 - name: Set up hosts files
   lineinfile:
     path: /etc/hosts
-    line: "{{ master_ip }} {{ master_fqdn }}"
+    line: "{{ master_ip }} {{ master_fqdn }} puppet"
 
 ##################################
-# Install Puppet Enterprise Agents
-# This first task can fail silently and ansible doesn't pick up error status
-# Maybe some check for connectivity?
-- name: Install puppet agent
-  shell: "curl -k https://{{ master_ip }}:8140/packages/current/install.bash | sudo bash"
-  ignore_errors: false
-  args:
-    creates: /opt/puppetlabs/
+# Install Puppet Opensource Agents
+- name: Install Puppet Opensource repo
+  yum:
+    name: "{{ puppet_opensource_url }}"
+    state: present
 
-- name: Initial Puppet run on nodes
-  command: /opt/puppetlabs/bin/puppet agent -t
-  ignore_errors: true
-  register: puppet_agent
+- name: Install Puppet Opensource package
+  yum:
+    name: puppet-agent
+    state: present
+
+- name: Puppet Opensource sudoers
+  lineinfile:
+    path: /etc/sudoers.d/extra
+    line: 'Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin'
+    create: true
+    owner: root
+    group: root
+    mode: 0440
 

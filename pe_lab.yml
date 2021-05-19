@@ -6,8 +6,8 @@
 
   tasks:
   - include_vars: inventory/vault
-  - include_vars: "inventory/vars/{{ ansible_distribution }}/vars.yml"
-    
+  - include_vars: "inventory/vars/{{ ansible_distribution }}/pe_vars.yml"
+
   - name: install base packages
     action: >
       {{ ansible_pkg_mgr }} name={{packages}} state=present
