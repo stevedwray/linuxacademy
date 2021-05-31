@@ -11,7 +11,8 @@ all:
         pe-node-2:
       vars:
         master_fqdn: swray1c.mylabserver.com
-        master_ip: 172.31.39.165
+        master_ip: 172.31.23.88
+        ansible_user: cloud_user
     pe_masters:
       hosts: 
         pe-master-1:
