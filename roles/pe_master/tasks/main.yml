@@ -56,3 +56,21 @@
     name: pdk
     state: present
 
+- name: Set up deploy key
+  command: "ssh-keygen -t rsa -b 2048 -P '' -f /etc/puppetlabs/puppetserver/ssh/id-control_repo.rsa"
+  args:
+    creates: /etc/puppetlabs/puppetserver/ssh/id-control_repo.rsa
+  register: key_generated
+
+- name: Create deploy key
+  openssh_keypair:
+    path: /etc/puppetlabs/puppetserver/ssh/id-control_repo.rsa
+    size: 2048
+    type: rsa
+  register: deploy_key
+
+- name: Show public key
+  debug:
+    msg: "{{ deploy_key.public_key }}"
+  when: deploy_key
+    
